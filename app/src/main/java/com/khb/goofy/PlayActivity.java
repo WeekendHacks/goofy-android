@@ -14,7 +14,7 @@ import com.github.nkzawa.socketio.client.Socket;
 
 import java.net.URISyntaxException;
 
-public class MainActivity extends Activity {
+public class PlayActivity extends Activity {
 
     private Socket mSocket;
     Button mPlayBtn;
@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
         mSocket.on("track", onNewMessage);
         mPlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View vie) {
                 mSocket.emit("mood", "Test");
 
             }
