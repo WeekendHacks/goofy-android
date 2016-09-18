@@ -19,8 +19,16 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.github.nkzawa:socket.io-client:0.3.0'
-
+    compile 'com.spotify.sdk:spotify-auth:1.0.0-beta13@aar'
+    compile 'com.spotify.sdk:spotify-player:1.0.0-beta13@aar'
 }

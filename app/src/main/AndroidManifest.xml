@@ -24,6 +24,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".CameraActivity"></activity>
+        <!-- Needed for LoginActivity to work -->
+        <activity
+            android:name="com.spotify.sdk.android.authentication.LoginActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
     </application>
 
 </manifest>
