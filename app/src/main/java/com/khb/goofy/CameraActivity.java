@@ -1,6 +1,7 @@
 package com.khb.goofy;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -12,18 +13,28 @@ import android.widget.Button;
 
 import org.json.JSONObject;
 
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class CameraActivity extends Activity {
-
+public static final String EMOTION_ANGER = "com.khb.goofy.CameraActivity";
     private Button mCameraButton;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     @Override
@@ -55,13 +66,19 @@ public class CameraActivity extends Activity {
 
     private void sendImage(Bitmap image) {
 
-            GetImageStatistics stat = new GetImageStatistics();
+            GetImageStatistics stat = new GetImageStatistics(getApplicationContext());
             stat.execute(image);
         }
     }
-     class GetImageStatistics extends AsyncTask<Bitmap, Void, Integer> {
+     class GetImageStatistics extends AsyncTask<Bitmap, Void, String> {
+         protected Context mContext;
+         String mEmotion = null;
+         GetImageStatistics(Context context) {
+    this.mContext = context;
+}
         @Override
-        protected Integer doInBackground(Bitmap... Params) {
+        protected String doInBackground(Bitmap... Params) {
+
             try {
                 URL url = new URL("https://api.projectoxford.ai/emotion/v1.0/recognize");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -82,20 +99,52 @@ public class CameraActivity extends Activity {
                 os.close();
 
                 Log.d("Response code is", Integer.toString(connection.getResponseCode()));
-                Log.d("Message is", connection.getResponseMessage());
                 InputStream is = connection.getInputStream();
                 BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-                String line;
+
                 StringBuffer response = new StringBuffer();
-                while((line = rd.readLine()) != null) {
-                    response.append(line);
-                    response.append('\n');
-                }
+                setEmotionObject(rd, response);
+
                 Log.d("Response", response.toString());
             } catch (Exception e) {
                 Log.d("Error", e.toString());
             }
-            return 0;
+            return mEmotion;
     }
-}
+         @Override
+         protected void onPostExecute(String emotion) {
+             Intent intent = new Intent(mContext, PlayActivity.class);
+             intent.putExtra(CameraActivity.EMOTION_ANGER, mEmotion );
+             mContext.startActivity(intent);
+         }
+         private  void setEmotionObject(BufferedReader rd, StringBuffer response) {
+             String line;
+
+
+             try {
+                 while ((line = rd.readLine()) != null) {
+                         response.append(line);
+                         response.append('\n');
+                     }
+                 ArrayList<Object> one= new Gson().fromJson(response.toString(), ArrayList.class);
+                 Map<String, Object> jsonJavaRootObject = (Map<String, Object>) one.get(0);
+                 Map<String, Double> emotionMap = (Map)jsonJavaRootObject.get("scores");
+                 Map.Entry<String, Double> maxEntry = null;
+                 Map<String, Double> myMap = new HashMap<String, Double>();
+                 myMap.put("anger", emotionMap.get("anger"));
+                 myMap.put("sadness", emotionMap.get("sadness"));
+                 myMap.put("happiness", emotionMap.get("happiness"));
+                 for (Map.Entry<String, Double> entry : myMap.entrySet())
+                 {
+                     if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0)
+                         maxEntry = entry;
+                 }
+                 Log.d("Anger", maxEntry.toString());
+             } catch (Exception e) {
+                 Log.d("Error", e.toString());
+                 return;
+             }
+             return;
+         }
+     }
 
