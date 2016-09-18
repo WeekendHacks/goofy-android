@@ -55,6 +55,7 @@ public class PlayActivity extends Activity implements
     private Socket mSocket;
     Button mPlayBtn;
     Button mStopBtn;
+    Button mPlayNxt;
     private Boolean isConnected = true;
     private double mlatency = 0;
     private String Log_TAG = "PlayActivity";
@@ -75,11 +76,13 @@ public class PlayActivity extends Activity implements
         mSocket.on("track", onTrack);
         mSocket.on("ping",onPing);
         mSocket.on("ponged_reply",onPongedReply);
+        mSocket.on("play_next",onPlayNext);
         mSocket.on("stop_track",onStopTrack);
         mSocket.connect();
 
         mPlayBtn = (Button)findViewById(R.id.play);
         mStopBtn = (Button) findViewById(R.id.stop);
+        mPlayNxt = (Button) findViewById(R.id.next);
         mPlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,6 +99,12 @@ public class PlayActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 mSocket.emit("stop", "stop");
+            }
+        });
+        mPlayNxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSocket.emit("next_song", "next");
             }
         });
         mCameraButton = (Button)findViewById(R.id.camera_button);
@@ -153,6 +162,7 @@ public class PlayActivity extends Activity implements
                         mSocket.off("ping",onPing);
                         mSocket.off("ponged_reply",onPongedReply);
                         mSocket.off("stop_track", onStopTrack);
+                        mSocket.off("play_next", onPlayNext);
                     }
                 }
             });
@@ -194,6 +204,41 @@ public class PlayActivity extends Activity implements
                                     Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
                                 }
                             });
+                        }catch(InterruptedException e){
+                            e.printStackTrace();
+                        }
+                    } catch (JSONException e) {
+                        return;
+                    }
+
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onPlayNext = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+
+                    try {
+                        double serverTime = data.getDouble("latency");
+                        double totalLatency = serverTime + mlatency;
+
+                        try{
+                            Thread.sleep((long) (5000 - totalLatency));
+
+//                            if(mMediaPlayer == null){
+//                                mMediaPlayer = new MediaPlayer();
+//                            }
+//                            mMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.all);
+//                            mMediaPlayer.start();
+                            if(mPlayer != null){
+                                mPlayer.skipToNext();
+                            }
                         }catch(InterruptedException e){
                             e.printStackTrace();
                         }
@@ -297,6 +342,7 @@ public class PlayActivity extends Activity implements
                         mSocket.off("ping",onPing);
                         mSocket.off("ponged_reply",onPongedReply);
                         mSocket.off("stop_track", onStopTrack);
+                        mSocket.off("play_next",onPlayNext);
                     }
                 }
             });
