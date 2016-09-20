@@ -1,8 +1,8 @@
 # GOOFY NATIVE 
 
-Actions speak louder than words : [Youtube link](https://youtube.com/watch?v=XLZkoxvBheI)
-Featured in [Cornell Sun](http://cornellsun.com/2016/09/19/students-come-together-to-code-solve-problems-at-the-bigred-hacks/)
-Winner of BigRedHacks (Cornell Hackathon) - Best use of Microsoft Services
+Actions speak louder than words : [Youtube link](https://youtube.com/watch?v=XLZkoxvBheI)  
+Featured in [Cornell Sun](http://cornellsun.com/2016/09/19/students-come-together-to-code-solve-problems-at-the-bigred-hacks/)  
+Winner of BigRedHacks (Cornell Hackathon) - Best use of Microsoft Services  
 
 ##Motivation : 
 Using multiple smartphones to provide music to a party. Also, choosing songs at the party is always a challenge.
