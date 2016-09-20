@@ -1,6 +1,8 @@
 # goofy-android
 
 Actions speak louder than words : [Youtube link](https://youtube.com/watch?v=XLZkoxvBheI)
+Featured in [Cornell Sun](http://cornellsun.com/2016/09/19/students-come-together-to-code-solve-problems-at-the-bigred-hacks/)
+Winner of BigRedHacks (Cornell Hackathon) - Best use of Microsoft Services
 
 ##Motivation : 
 Using multiple smartphones to provide music to a party. Also, choosing songs at the party is always a challenge.
@@ -23,3 +25,5 @@ Distributed Systems. Well, mostly. All jokes apart, we learned a lot of things. 
 ##What's next for Goofy:
 We covered parties. But this can be used for a lot different things that we thought of in the process. SSHHH….we are saving them for future hackathons !
 
+##Technology Used:
+Node.js, Socket.IO, Android, Microsoft Azure, Microsoft Cognitive API
