@@ -1,4 +1,4 @@
-# goofy-android
+# GOOFY NATIVE 
 
 Actions speak louder than words : [Youtube link](https://youtube.com/watch?v=XLZkoxvBheI)
 Featured in [Cornell Sun](http://cornellsun.com/2016/09/19/students-come-together-to-code-solve-problems-at-the-bigred-hacks/)
@@ -27,3 +27,6 @@ We covered parties. But this can be used for a lot different things that we thou
 
 ##Technology Used:
 Node.js, Socket.IO, Android, Microsoft Azure, Microsoft Cognitive API
+
+Screehshot:
+![Screenshot](https://github.com/WeekendHacks/goofy-android/blob/master/a9043aaa90413cgoofy-scrnshot.jpg)
